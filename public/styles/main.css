@@ -31,8 +31,17 @@ h1 {
 }
 
 #heading {
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+  max-width: 600px;
   background-color: #a683e3;
   text-align: center;
+}
+
+#heading h1{
+  cursor: pointer;
+  padding: 20px;
 }
 
 form.edit {

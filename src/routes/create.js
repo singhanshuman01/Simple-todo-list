@@ -4,8 +4,8 @@ const query = require('../db/query');
 const router = express.Router();
 
 router.post('/', async(req,res)=>{
-    const {newItem} = req.body;
-    await query.addItem(newItem);
+    const {newItem, list} = req.body;
+    await query.addItem(newItem,list);
     res.redirect('/');
 })
 

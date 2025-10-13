@@ -9,8 +9,8 @@ const updateList = async (id,text) => {
     await dbQuery.query("update items set title = $1 where id = $2",[text,id]);
 }
 
-const addItem = async (text) => {
-    await dbQuery.query("insert into items(title) values($1)",[text]);
+const addItem = async (text, targ) => {
+    await dbQuery.query("insert into items(title,target) values($1,$2)",[text, targ]);
 }
 
 const deleteItem = async (id) => {

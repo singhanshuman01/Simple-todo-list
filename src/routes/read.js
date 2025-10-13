@@ -1,13 +1,13 @@
 const express = require('express');
 const query = require('../db/query');
-// const ejs = require('ejs');
 
 const router = express.Router();
+const targ = ["Today","Tomorrow","This Week"];
 
 router.get('/', async (req,res)=>{
     const items = await query.getList();
     res.render('index.ejs',{
-        listTitle: "Today",
+        listTitle: targ,
         listItems: items
     });
 })
