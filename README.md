@@ -17,8 +17,12 @@ Then install the necessary node modules and packages
 npm i
 npm i nodemon
 ```
-Open your psql prompt(make sure your pwd is the Simple-todo-list folder) and run
+Open your terminal in the same folder and run
 ```
+psql -U <your-username> -d <your-dbname> -h localhost
+//enter you password
+
+//run
 \i ./schema.sql
 ```
 
@@ -32,8 +36,10 @@ DB_NAME=
 DB_PASSWORD=
 ```
 
-##Once you've completed this setup, time to run it
+## Once you've completed this setup, time to run it
 ```
 npm run start
+//or
+npm start
 ```
 You can view the page on localhost and specified port.
