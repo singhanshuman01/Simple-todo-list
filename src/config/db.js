@@ -13,6 +13,10 @@ pool.on('error',(err,client)=>{
     process.exit(-1);
 });
 
+pool.on('connect', (client)=>{
+    console.log("connected to db");
+})
+
 module.exports = {
     query: (text,param)=>pool.query(text,param),
     pool

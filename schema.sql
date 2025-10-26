@@ -1,7 +1,14 @@
 CREATE TABLE items(
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    target VARCHAR(30)
-)
+    target VARCHAR(30),
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
-INSERT INTO items(title,target) VALUES('Learn NodeJS','Today')('Be a backend Developer', 'Tomorrow');
+CREATE TABLE users(
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50),
+    password TEXT
+);
+

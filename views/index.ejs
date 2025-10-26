@@ -33,9 +33,9 @@
         <% } %>
           <% } %>
 
-            <form class="item" action="/add" method="post">
+            <form class="item" action="/home" method="post">
               <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-              <button class="add" type="submit" name="list" value="Today" >+</button>
+              <button class="add" type="submit" name="list" value="Today">+</button>
             </form>
   </div>
 
@@ -64,9 +64,9 @@
         <% } %>
           <% } %>
 
-            <form class="item" action="/add" method="post">
+            <form class="item" action="/home" method="post">
               <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-              <button class="add" type="submit" name="list" value="Tomorrow" >+</button>
+              <button class="add" type="submit" name="list" value="Tomorrow">+</button>
             </form>
   </div>
 
@@ -95,11 +95,16 @@
         <% } %>
           <% } %>
 
-            <form class="item" action="/add" method="post">
+            <form class="item" action="/home" method="post">
               <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-              <button class="add" type="submit" name="list" value="This Week" >+</button>
+              <button class="add" type="submit" name="list" value="This Week">+</button>
             </form>
+
   </div>
+
+  <form action="/logout" method="post">
+    <input type="submit" value="logout" id="logout-btn">
+  </form>
 
   <script>
     function handler(id) {

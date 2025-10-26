@@ -124,3 +124,32 @@ footer {
   color: white;
   text-align: center;
 }
+
+#logout-btn {
+  background-color: #a683e3;      /* Red for 'danger' / logout */
+  color: white;                   /* White text for contrast */
+  border: none;                   /* No default border */
+  border-radius: 8px;             /* Rounded corners */
+  padding: 10px 18px;             /* Comfortable clickable size */
+  font-size: 16px;                /* Readable text size */
+  font-weight: 600;               /* Slightly bold */
+  cursor: pointer;                /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover animation */
+}
+
+/* Hover effect */
+#logout-btn:hover {
+  background-color: #8e60dd;      /* Slightly darker red */
+  transform: scale(1.05);         /* Subtle "pop" on hover */
+}
+
+/* Active (click) effect */
+#logout-btn:active {
+  transform: scale(0.97);         /* Small press-down feel */
+}
+
+/* Optional: focus outline for accessibility */
+#logout-btn:focus {
+  outline: 2px solid #9e81cf;
+  outline-offset: 2px;
+}
