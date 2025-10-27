@@ -23,7 +23,7 @@ h1 {
 }
 
 .box {
-  max-width: 400px;
+  max-width: 500px;
   margin: 50px auto;
   background: white;
   border-radius: 5px;
@@ -33,8 +33,8 @@ h1 {
 #heading {
   display: flex;
   flex-direction:row;
-  justify-content: space-between;
-  max-width: 600px;
+  justify-content: center;
+  max-width: 500px;
   background-color: #a683e3;
   text-align: center;
 }
@@ -106,7 +106,7 @@ input[type="text"] {
   background: transparent;
   font-size: 20px;
   font-weight: 200;
-  width: 80%;
+  width: 60%;
 }
 
 input[type="text"]:focus {
@@ -125,9 +125,18 @@ footer {
   text-align: center;
 }
 
+.esc {
+  border: none;
+  color: white;
+  background-color: #a683e3;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+}
+
 #logout-btn {
-  background-color: #a683e3;      /* Red for 'danger' / logout */
-  color: white;                   /* White text for contrast */
+  background-color: #f0f0f1;      /* Red for 'danger' / logout */
+  color: #a683e3;                   /* White text for contrast */
   border: none;                   /* No default border */
   border-radius: 8px;             /* Rounded corners */
   padding: 10px 18px;             /* Comfortable clickable size */
@@ -139,7 +148,7 @@ footer {
 
 /* Hover effect */
 #logout-btn:hover {
-  background-color: #8e60dd;      /* Slightly darker red */
+  background-color: white;      /* Slightly darker red */
   transform: scale(1.05);         /* Subtle "pop" on hover */
 }
 
@@ -150,6 +159,6 @@ footer {
 
 /* Optional: focus outline for accessibility */
 #logout-btn:focus {
-  outline: 2px solid #9e81cf;
+  outline: 2px solid #332e3d;
   outline-offset: 2px;
 }

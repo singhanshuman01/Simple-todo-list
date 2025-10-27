@@ -2,10 +2,12 @@ const express = require('express');
 const logger = require('./middleware/logger');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cron = require('node-cron');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const emailer = require('./services/emailer');
 
 const app = express();
 
@@ -16,9 +18,12 @@ app.use(logger);
 app.use(cookieParser());
 app.use(express.static('public/'));
 
+cron.schedule('0 18 * * *', emailer);
 
 app.use('/', authRoutes);
 app.use('/', userRoutes);
-// app.use('/',(req,res)=>res.sendStatus(404).json({error: "Not found"}));
+app.use((req, res) => {
+    res.status(404).json({ error: 'Route not found' });
+});
 
 module.exports = app;

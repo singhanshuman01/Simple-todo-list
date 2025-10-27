@@ -1,152 +1,58 @@
 <%- include('partials/header.ejs'); -%>
 
   <div class="box" id="heading">
-    <% listTitle.forEach(targ=> { %>
-      <h1>
-        <%= targ %>
-      </h1>
-      <% }); %>
+    <h2>Your Tasks</h2>
   </div>
 
-  <div class="box" id="today">
-    <% for(let item of listItems){%>
-      <% if(item.target=="Today" ){ %>
-        <div class="item">
-          <form action="/delete" method="post">
-            <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
-          </form>
+  <div class="box">
+    <% for(let item of listItems) {%>
+      <div class="item">
+        <form action="/delete" method="post">
+          <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
+        </form>
 
-          <p id="title<%=item.id%>">
-            <%= item.title %>
-          </p>
+        <p id="title<%=item.id%>">
+          Title: <%= item.title %> <br> 
+          Date: <%= item.target.toDateString() %>
+        </p>
+        <form class="edit" action="/edit" method="post">
+          <input type="hidden" name="updatedItemId" value="<%= item.id %>">
+          <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
+            autocomplete="off" autofocus="true" hidden="true" />
+          <input id="list<%=item.id%>" type="date" name="updatedItemTarg" value=<%= item.target.getFullYear() %>-<%= item.target.getMonth()+1 %>-<%= item.target.getDate() %>
+            autocomplete="off" autofocus="true" hidden="true" />
+          
+          <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
+            src="/assets/icons/check-solid.svg" alt="tick image"></button>
+        </form>
+        <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
+            src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
+        <button id="esc<%= item.id %>" class="esc" onclick="handler('<%= item.id %>')" hidden="true">x</button>
 
-          <form class="edit" action="/edit" method="post">
-            <input type="hidden" name="updatedItemId" value="<%= item.id %>">
-            <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
-              autocomplete="off" autofocus="true" hidden="true" />
-            <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
-                src="/assets/icons/check-solid.svg" alt="tick image"></button>
-          </form>
-          <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
-              src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
-        </div>
-        <% } %>
-          <% } %>
 
-            <form class="item" action="/home" method="post">
-              <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-              <button class="add" type="submit" name="list" value="Today">+</button>
-            </form>
+      </div>
+    <% } %>
+
+    <form class="item" action="/home" method="post">
+      <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" required/>
+      <input type="date" name="list" id="target" required>
+      <button class="add" type="submit">+</button>
+    </form>
   </div>
 
-  <div class="box" id="tomorrow" hidden="true">
-    <% for(let item of listItems){%>
-      <% if(item.target=="Tomorrow" ) { %>
-        <div class="item">
-          <form action="/delete" method="post">
-            <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
-          </form>
-
-          <p id="title<%=item.id%>">
-            <%= item.title %>
-          </p>
-
-          <form class="edit" action="/edit" method="post">
-            <input type="hidden" name="updatedItemId" value="<%= item.id %>">
-            <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
-              autocomplete="off" autofocus="true" hidden="true" />
-            <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
-                src="/assets/icons/check-solid.svg" alt="tick image"></button>
-          </form>
-          <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
-              src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
-        </div>
-        <% } %>
-          <% } %>
-
-            <form class="item" action="/home" method="post">
-              <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-              <button class="add" type="submit" name="list" value="Tomorrow">+</button>
-            </form>
-  </div>
-
-  <div class="box" id="this-week" hidden="true">
-    <% for(let item of listItems){%>
-      <% if(item.target=="This Week" ) { %>
-        <div class="item">
-          <form action="/delete" method="post">
-            <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
-          </form>
-
-          <p id="title<%=item.id%>">
-            <%= item.title %>
-          </p>
-
-          <form class="edit" action="/edit" method="post">
-            <input type="hidden" name="updatedItemId" value="<%= item.id %>">
-            <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
-              autocomplete="off" autofocus="true" hidden="true" />
-            <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
-                src="/assets/icons/check-solid.svg" alt="tick image"></button>
-          </form>
-          <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
-              src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
-        </div>
-        <% } %>
-          <% } %>
-
-            <form class="item" action="/home" method="post">
-              <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-              <button class="add" type="submit" name="list" value="This Week">+</button>
-            </form>
-
-  </div>
-
+ 
   <form action="/logout" method="post">
     <input type="submit" value="logout" id="logout-btn">
   </form>
 
   <script>
     function handler(id) {
-      document.getElementById("title" + id).setAttribute("hidden", true)
-      document.getElementById("edit" + id).setAttribute("hidden", true)
-      document.getElementById("done" + id).removeAttribute("hidden")
-      document.getElementById("input" + id).removeAttribute("hidden")
+      document.getElementById("title" + id).toggleAttribute("hidden")
+      document.getElementById("edit" + id).toggleAttribute("hidden")
+      document.getElementById("done" + id).toggleAttribute("hidden")
+      document.getElementById("input" + id).toggleAttribute("hidden")
+      document.getElementById("list"+id).toggleAttribute("hidden")
+      document.getElementById("esc"+id).toggleAttribute("hidden")
     }
-    // Define the function you want to run on click
-    function handleH1Click(event) {
-      // 'this' refers to the specific h1 element that was clicked
-      const today = document.getElementById("today")
-      const tomorrow = document.getElementById("tomorrow")
-      const this_week = document.getElementById("this-week");
-
-      console.log(`You Clicked ${event.target.textContent.trim()}`);
-
-
-      // You can also use event.target
-      if (event.target.textContent.trim() === 'Today') {
-        today.removeAttribute("hidden");
-        tomorrow.setAttribute("hidden", true);
-        this_week.setAttribute("hidden", true);
-      }
-      else if (event.target.textContent.trim() === 'Tomorrow') {
-        tomorrow.removeAttribute("hidden");
-        today.setAttribute("hidden", true);
-        this_week.setAttribute("hidden", true);
-      }
-      else if (event.target.textContent.trim() === 'This Week') {
-        this_week.removeAttribute("hidden");
-        today.setAttribute("hidden", true);
-        tomorrow.setAttribute("hidden", true);
-      }
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('heading');
-      const h1Elements = container.querySelectorAll('h1');
-      h1Elements.forEach(h1 => {
-        h1.addEventListener('click', handleH1Click);
-      });
-    });
-
   </script>
   <%- include('partials/footer.ejs'); -%>
