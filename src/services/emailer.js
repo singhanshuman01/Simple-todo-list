@@ -1,4 +1,3 @@
-
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const db = require('../config/db');
@@ -16,25 +15,49 @@ const tasks = {};
 
 const r = async function () {
     try {
-        const result = await db.pool.query("select u.email, i.title from users u join items i on u.id=i.user_id where i.target=CURRENT_DATE+INTERVAL '1 day' order by u.email");
-        for (let row of result.rows) {
-            if (!tasks[row.email]) tasks[row.email] = [];
-            tasks[row.email].push(row.title);
+        const { rows } = await db.pool.query(`
+            SELECT u.email, i.title FROM users u
+            JOIN items i ON u.id=i.user_id
+            WHERE i.target = CURRENT_DATE + INTERVAL '1 day'
+            ORDER BY u.email
+        `);
+
+        if (!rows?.length) {
+            console.log(`No tasks for tomorrow`);
+            return;
         }
-        console.log(tasks);
-        for (let [email, task] of Object.entries(tasks)) {
-            const msg = `Your tasks for tomorrow are: ${task.join(', ')}`;
-            await transporter.sendMail({
-                from: process.env.EMAIL_FROM,
-                to: email,
-                subject: 'Your tasks for tomorrow',
-                html: msg
-            });
-            console.log(`Email sent to ${email}: the tasks ${msg}`);
+
+        for (const { email, title } of rows) {
+            if (!email || !title) continue;
+            (tasks[email] ||= []).push(title);
         }
-    } catch (error) {
-        console.error(error);
+
+        if (Object.keys(tasks).length === 0) {
+            console.log(`No valid entries`);
+            return;
+        }
+
+        await Promise.all(Object.entries(tasks).map(async ([email, tasklist]) => {
+            const msg = `
+                <h2>Your tasks for tomorrow</h2>
+                ${tasklist.join(', ')}
+            `;
+            try {
+                await transporter.sendMail({
+                    from: process.env.EMAIL_FROM,
+                    to: email,
+                    subject: 'Task List',
+                    html: msg
+                });
+                console.log(`Email sent to ${email}`);
+            } catch (err) {
+                console.error(`Failed to send mail to ${email}:`, err.message);
+            }
+        }));
+    } catch (err) {
+        console.error('DB error');
     }
 }
+
 
 module.exports = r;
