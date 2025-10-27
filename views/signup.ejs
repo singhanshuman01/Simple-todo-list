@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/signup.css">
     <link rel="shortcut icon" href="assets/favicon/images.png" type="image/x-icon">
     <title>Document</title>
 </head>
 
 <body>
-    <form action="/signup" method="post">
+    <div class="box">
+        <form action="/signup" method="post" id="signup-form">
         <label for="username">Username</label>
         <input type="text" name="username" id="">
         <label for="password">Password</label>
@@ -23,6 +25,8 @@
         Existing User,
         <a href="http://localhost:3000/login">Login</a>
     </p>
+    </div>
+    
 </body>
 
 </html>
