@@ -4,15 +4,14 @@ const bcrypt = require('bcrypt');
 const session = require('../utils/session');
 
 const signUp = async function(req,res){
-    const {username, password} = req.body;
+    const {username, password, email} = req.body;
     try{
         const user = await db.checkUser(username);
-        console.log("user: ",user);
         if(user){
             res.json({"Error":"User already exists"});
         }else{
             const hash = bcrypt.hashSync(password,10);
-            const result = await db.addUser(username,hash);
+            const result = await db.addUser(username,hash, email);
             if(result){
                 const uid = crypto.randomBytes(16).toString('hex');
                 session[uid] = result;

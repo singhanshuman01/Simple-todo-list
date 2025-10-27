@@ -1,8 +1,8 @@
 const dbQuery = require('../config/db');
 
-const addUser = async function(username, password){
+const addUser = async function(username, password, email){
     try {
-        const result = await dbQuery.query("insert into users(username, password) values($1,$2) returning id",[username,password]);
+        const result = await dbQuery.query("insert into users(username, password, email) values($1,$2,$3) returning id",[username,password, email]);
         // console.log(id);
         return result.rows.id;
     } catch (error) {
@@ -15,8 +15,6 @@ const checkUser = async function(username){
     try {
         const result = await dbQuery.query("select * from users where username = $1",[username]);
         if(result.rowCount>0){
-            console.log(result.rowCount);
-            console.log(result.rows[0]);
             return result.rows[0];
         }else{
             return null;
@@ -29,7 +27,7 @@ const checkUser = async function(username){
 const getList = async function(user_id){
     try {
         
-    const result = await dbQuery.query("select * from items where user_id=$1",[user_id]);
+    const result = await dbQuery.query("select * from items where user_id=$1 order by target",[user_id]);
     return result.rows;
     } catch (error) {
         console.error(error);
@@ -37,10 +35,10 @@ const getList = async function(user_id){
     }
 }
 
-const updateList = async (id,text) => {
+const updateList = async (id,text,targ) => {
     try {
         
-        await dbQuery.query("update items set title = $1 where id = $2",[text,id]);
+        await dbQuery.query("update items set title = $1,target=$2 where id = $3",[text,targ,id]);
     } catch (error) {
         console.error(error);
     }

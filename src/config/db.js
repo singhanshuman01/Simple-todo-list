@@ -1,3 +1,4 @@
+
 const pg = require('pg');
 
 const pool = new pg.Pool({
@@ -9,7 +10,7 @@ const pool = new pg.Pool({
 });
 
 pool.on('error',(err,client)=>{
-    console.error(error);
+    console.error(err);
     process.exit(-1);
 });
 
