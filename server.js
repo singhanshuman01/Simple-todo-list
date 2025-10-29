@@ -1,7 +1,6 @@
-const app = require('./src/index');
+const { server } = require('./src/websocket/websock');
 require('dotenv').config();
-
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, ()=> console.log(`Server listening on PORT:${port}`));
+server.listen(port, () => console.log(`Server listening on PORT:${port}`));

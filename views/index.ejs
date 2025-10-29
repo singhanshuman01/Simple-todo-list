@@ -4,26 +4,28 @@
     <h2>Your Tasks</h2>
   </div>
 
-  <div class="box">
+  <div class="box" id="cry">
     <% for(let item of listItems) {%>
-      <div class="item">
-        <form action="/delete" method="post">
-          <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
+      <div class="item" id="todo<%= item.id %>">
+        <form action="/delete" method="post" class="delete-item" autocomplete="off">
+          <input class="delete-checkbox" type="checkbox" name="deleteItemId" value="<%= item.id %>" autocomplete="off">
+          <!-- onchange="this.form.submit()" -->
         </form>
 
         <p id="title<%=item.id%>">
-          Title: <%= item.title %> <br> 
-          Date: <%= item.target.toDateString() %>
+          Title: <%= item.title %> <br>
+            Date: <%= item.target.toDateString() %>
         </p>
-        <form class="edit" action="/edit" method="post">
+        <form class="edit edit-item" action="/edit" method="post">
           <input type="hidden" name="updatedItemId" value="<%= item.id %>">
-          <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
+          <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>" autocomplete="off"
+            autofocus="true" hidden="true" />
+          <input id="list<%=item.id%>" type="date" name="updatedItemTarg"
+            value="<%= item.target.getFullYear() %>-<%= String(item.target.getMonth()+1).padStart(2,0) %>-<%= String(item.target.getDate()).padStart(2,0) %>"
             autocomplete="off" autofocus="true" hidden="true" />
-          <input id="list<%=item.id%>" type="date" name="updatedItemTarg" value=<%= item.target.getFullYear() %>-<%= item.target.getMonth()+1 %>-<%= item.target.getDate() %>
-            autocomplete="off" autofocus="true" hidden="true" />
-          
+
           <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
-            src="/assets/icons/check-solid.svg" alt="tick image"></button>
+              src="/assets/icons/check-solid.svg" alt="tick image"></button>
         </form>
         <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
             src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
@@ -31,28 +33,130 @@
 
 
       </div>
-    <% } %>
+      <% } %>
 
-    <form class="item" action="/home" method="post">
-      <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" required/>
-      <input type="date" name="list" id="target" required>
-      <button class="add" type="submit">+</button>
-    </form>
+        <form class="item" action="/home" method="post" id="new-item">
+          <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" required />
+          <input type="date" name="list" id="target" required>
+          <button class="add" type="submit">+</button>
+        </form>
   </div>
 
- 
+
   <form action="/logout" method="post">
     <input type="submit" value="logout" id="logout-btn">
   </form>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     function handler(id) {
       document.getElementById("title" + id).toggleAttribute("hidden")
       document.getElementById("edit" + id).toggleAttribute("hidden")
       document.getElementById("done" + id).toggleAttribute("hidden")
       document.getElementById("input" + id).toggleAttribute("hidden")
-      document.getElementById("list"+id).toggleAttribute("hidden")
-      document.getElementById("esc"+id).toggleAttribute("hidden")
+      document.getElementById("list" + id).toggleAttribute("hidden")
+      document.getElementById("esc" + id).toggleAttribute("hidden")
     }
+    const socket = io();
+
+    const addform = document.getElementById('new-item');
+    addform.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formdata = new FormData(addform);
+        const f = Object.fromEntries(formdata);
+        console.log('Added', f);
+        socket.emit('added', f.newItem, f.list);
+        e.target.reset();
+      });
+    const fn = function () {
+      const updform = document.querySelectorAll('form.edit-item');
+      const deletebox = document.querySelectorAll('input.delete-checkbox');
+      const delform = document.querySelectorAll('form.delete-item');
+      
+      updform.forEach(form => {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const formdata = new FormData(form);
+          const f = Object.fromEntries(formdata);
+          console.log('Updated', f);
+          socket.emit('update', f.updatedItemId, f.updatedItemTitle, f.updatedItemTarg);
+          handler(f.updatedItemId);
+        });
+      });
+
+      deletebox.forEach(box => {
+        box.addEventListener('change', e => {
+          const form = e.target.form;
+          form.requestSubmit();
+        });
+      });
+      delform.forEach(form => {
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          const formdata = new FormData(form);
+          const f = Object.fromEntries(formdata);
+          console.log(f);
+          socket.emit('deleted', f.deleteItemId);
+        });
+      });
+
+    }
+
+    fn();
+
+    socket.on('addNew', (newItemId, newItem, targ) => {
+      console.log("Event addNew triggered");
+      const box = document.querySelector('#cry');
+      const child = document.createElement('div');
+      child.innerHTML += `
+        <form action="/delete" method="post" class="delete-item"  autocomplete="off">
+          <input class="delete-checkbox" type="checkbox"  name="deleteItemId"
+            value="${newItemId}" autocomplete="off">
+            <!-- onchange="this.form.submit()" -->
+        </form>
+
+        <p id="title${newItemId}">
+          Title: ${newItem} <br>
+            Date: ${targ}
+        </p>
+        <form class="edit edit-item" action="/edit" method="post">
+          <input type="hidden" name="updatedItemId" value="${newItemId}">
+          <input id="input${newItemId}" type="text" name="updatedItemTitle" value="${newItem}" autocomplete="off"
+            autofocus="true" hidden="true" />
+          <input id="list${newItemId}" type="date" name="updatedItemTarg" value=${targ}
+              autocomplete="off" autofocus="true" hidden="true" />
+
+              <button id="done${newItemId}" class="edit" type="submit" hidden><img class="icon"
+                  src="/assets/icons/check-solid.svg" alt="tick image"></button>
+        </form>
+        <button id="edit${newItemId}" class="edit" onclick="handler('${newItemId}')"><img class="icon"
+            src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
+        <button id="esc${newItemId}" class="esc" onclick="handler('${newItemId}')" hidden="true">x</button>
+      `;
+      child.className = 'item';
+      child.id = `todo${newItemId}`;
+      box.insertBefore(child, addform);
+      fn();
+      console.log(newItemId, newItem, targ);
+    });
+    socket.on('upd', (newItemId, newItem, targ) => {
+      console.log("Event upd triggered");
+      const updatedItem = document.querySelector(`p#title${newItemId}`);
+      updatedItem.innerHTML = `
+        Title: ${newItem} <br>
+        Date: ${targ}
+      `;
+      document.querySelector(`input#input${newItemId}`).value = newItem;
+      document.querySelector(`input#list${newItemId}`).value = targ;
+      console.log(newItemId, newItem, targ);
+    });
+    socket.on('del', deleteId => {
+      console.log("Event del triggered");
+      const box = document.querySelector('div#cry');
+      const todo = document.querySelector(`div#todo${deleteId}`);
+      box.removeChild(todo);
+      console.log(deleteId);
+
+    });
   </script>
   <%- include('partials/footer.ejs'); -%>

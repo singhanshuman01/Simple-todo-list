@@ -46,15 +46,15 @@ const updateList = async (id,text,targ) => {
 
 const addItem = async (text, targ,user_id) => {
     try {        
-        await dbQuery.query("insert into items(title,target,user_id) values($1,$2, $3)",[text, targ,user_id]);
+        const id = await dbQuery.query("insert into items(title,target,user_id) values($1,$2, $3) returning id",[text, targ,user_id]);
+        return id.rows[0].id;
     } catch (error) {
         console.error(error);
     }
 }
 
 const deleteItem = async (id) => {
-    try {
-        
+    try {        
         await dbQuery.query("delete from items where id = $1",[id]);
     } catch (error) {
         console.error(error);
