@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
         io.to(`user_${socket.user_id}`).emit('del', deleteId);
     });
 
-    setTimeout(() => {
+    setInterval(() => {
         rateMap[socket.user_id]=0;
     }, 200);
 
