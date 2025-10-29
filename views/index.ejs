@@ -156,7 +156,11 @@
       const todo = document.querySelector(`div#todo${deleteId}`);
       box.removeChild(todo);
       console.log(deleteId);
+    });
 
+    socket.on('rate-exceed', (response)=>{
+      console.warn(response.msg);
+      window.alert(response.msg);
     });
   </script>
   <%- include('partials/footer.ejs'); -%>
