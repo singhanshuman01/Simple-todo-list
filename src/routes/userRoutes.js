@@ -9,7 +9,6 @@ router.get("/", (req, res) => res.redirect('/home'));
 router.get('/home',authCheck, async (req, res) => {
     const {id} = req;
     const items = await query.getList(id);
-    console.log(items);
     res.render('index.ejs', {
         listItems: items
     });

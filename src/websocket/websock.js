@@ -10,22 +10,25 @@ const io = new Server(server);
 
 
 io.use((socket, next) => {
-    try {
-        if (socket.handshake) {
-            const uid = socket.handshake.headers.cookie.split("=")[1];
-            if (uid) {
-                console.log(socket.handshake.headers.cookie);
-                console.log(session[uid] || null);
-                socket.user_id = session[uid] || null;
-            }
-            return next();
-        }
+  try {
+    const cookieHeader = socket.handshake.headers.cookie || '';
+    const cookies = Object.fromEntries(
+      cookieHeader.split(';').map(c => c.trim().split('='))
+    );
 
-    } catch (error) {
-        console.error(error);
-        return next(error);
+    const uid = cookies['uid'];
+    if (!uid || !session[uid]) {
+      return next(new Error('Unauthorized: invalid or missing session ID'));
     }
+
+    socket.user_id = session[uid];
+    next();
+  } catch (err) {
+    console.error(`Socket auth failed [${socket.id}]:`, err);
+    next(new Error('Internal authentication error'));
+  }
 });
+
 
 io.on('connection', (socket) => {
     console.log('A user connected.');
