@@ -1,5 +1,5 @@
 
-# A simple ToDo List
+# A not-simple ToDo List
 
 ### Tech Stack Used
 
@@ -34,6 +34,8 @@ DB_USER=
 DB_PORT=
 DB_NAME=
 DB_PASSWORD=
+EMAIL_FROM=
+APP_PASS=
 ```
 
 ## Once you've completed this setup, time to run it
