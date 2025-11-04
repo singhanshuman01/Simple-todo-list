@@ -19,7 +19,7 @@
           <input type="hidden" name="updatedItemId" value="<%= item.id %>">
           <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>"
             autocomplete="off" autofocus="true" hidden="true" />
-          <input id="list<%=item.id%>" type="date" name="updatedItemTarg" value=<%= item.target.getFullYear() %>-<%= item.target.getMonth()+1 %>-<%= item.target.getDate() %>
+          <input id="list<%=item.id%>" type="date" name="updatedItemTarg" value=<%= item.target.getFullYear() %>-<%= (item.target.getMonth()+1).pad(2,0) %>-<%= (item.target.getDate()).pad(2,0) %>
             autocomplete="off" autofocus="true" hidden="true" />
           
           <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
@@ -35,7 +35,7 @@
 
     <form class="item" action="/home" method="post">
       <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" required/>
-      <input type="date" name="list" id="target" required>
+      <input type="date" name="list" id="target" min="<%= (new Date()).toISOString().split('T')[0] %>" required>
       <button class="add" type="submit">+</button>
     </form>
   </div>
