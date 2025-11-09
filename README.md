@@ -9,7 +9,7 @@
 
 ### Features
 1. Multi-user and multi-session friendly, uses cookies for session persistence. Hashed passwords are stored in db ofcourse.
-2. Sends Emails(required during signups) to respected users daily for their respected tasks next day(if any).
+2. Sends Emails(required during signups) to users daily for their respective tasks next day(if any).
 3. Main branch runs on RESTful APIs and websocket branch is real-time, uses websockets(socket.io).
 4. Rate limiting is applied on server side (socket throttling in websockets).
 
